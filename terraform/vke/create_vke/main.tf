@@ -9,8 +9,9 @@ terraform {
   }
 }
 provider "volcengine" {
-  access_key = "AKLTNGZlY2YxNjczZWQ1NDI4MmIxODZiY2U1ZmRhMWE5ZWY"
-  secret_key = "WkRsaU16RTFZV0ptT1RVME5EVTJPVGc1TXpoaFpqRmxaR015WkdJMVl6UQ=="
+# 需要配置 AK/SK
+  access_key = "AK"
+  secret_key = "SK"
   # session_token = "sts token"
   region = "cn-beijing"
 }
