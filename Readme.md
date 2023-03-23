@@ -7,7 +7,12 @@
 
 ## Python
 ### Bio-OS
+#### v0.2
+1. 创建 workspace，并绑定共享集群
+2. 解绑集群，并删除workspace
 1. 获取共享集群 ID
+
+#### v0.2
 2. 创建 workspace
 3. 获取 Workspace ID (通过名字)
 4. Worksapce 关联 workflow 计算集群 bind_cluster_to_workspace workflow
