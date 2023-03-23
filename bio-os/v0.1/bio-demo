@@ -1,0 +1,101 @@
+'''
+1. 获取共享集群 ID
+2. 创建 workspace
+3. 获取 Workspace ID (通过名字)
+4. Worksapce 关联 workflow 计算集群 bind_cluster_to_workspace workflow
+5. Worksapce 关联 notebook 计算集群 bind_cluster_to_workspace notebook 
+6. Worksapce 解除关联 workflow 计算集群 unbind_cluster_to_workspace workflow
+7. Worksapce 解除关联 notebook 计算集群，unbind_cluster_to_workspace notebook 
+8. 删除 Workspace，Delete workspace 
+'''
+from __future__ import print_function
+from volcengine.bioos.BioOsService import BioOsService
+
+if __name__ == '__main__':
+    # set endpoint/region here if the default value is unsatisfied
+    bioos_service = BioOsService(endpoint='https://open.volcengineapi.com', region='cn-beijing')
+
+    # call below method if you don't set ak and sk in $HOME/.volc/config
+    bioos_service.set_ak('AK')
+    bioos_service.set_sk('SK')
+
+    create_workspace_name = "sdk_demo_zhuchenggang"
+    del_workspace_name = "sdk_demo_zhuchenggang"
+
+# 1. 获取共享集群 ID
+    params_list_cluster_share = {
+        # 'PageNumber': 1,
+        # 'PageSize': 10,
+        'Filter': {
+            #'IDs': ['test-workflow'],
+            # 'Status': ['Running'],
+            'Type': ['shared'],
+            #'Public': True,
+        },
+    }
+    cluster_id = bioos_service.list_clusters(params_list_cluster_share)["Items"][0]["ID"]
+    print("cluster_id:",cluster_id)
+# 2. 创建 Workspace
+    params_create_workspace = {
+        'Name': create_workspace_name,
+        'Description': 'test_SDK'
+    }
+    workspace_id = bioos_service.create_workspaces(params_create_workspace)["ID"]
+    print("workspce_id:",workspace_id)
+    print("workspce_name:",create_workspace_name)
+
+# 3. 获取 Workspace ID (通过名字)
+    params_list_workspace = {
+        # 'PageNumber': 1,
+        # 'PageSize': 10,
+        'Filter': {
+            'Keyword': del_workspace_name,
+        },
+    }
+    workspace_id2 = bioos_service.list_workspaces(params_list_workspace)["Items"][0]["ID"]
+    print("workspace_id:",workspace_id2)
+
+# 4. Worksapce 关联 workflow 计算集群 bind_cluster_to_workspace workflow
+    params_bind_cluster_workflow = {
+        'ID': workspace_id ,
+        'ClusterID': cluster_id, 
+        'Type': 'workflow',
+    }
+    bioos_service.bind_cluster_to_workspace(params_bind_cluster_workflow)
+    print("binding workflow cluster")
+
+# 5. Worksapce 关联 notebook 计算集群 bind_cluster_to_workspace notebook    
+    params_bind_cluster_notebook = {
+        'ID': workspace_id ,
+        'ClusterID': cluster_id, 
+        'Type': 'notebook',
+    }
+
+    bioos_service.bind_cluster_to_workspace(params_bind_cluster_notebook)
+    print("binding notebook cluster")
+
+# 6. Worksapce 解除关联 workflow 计算集群 unbind_cluster_to_workspace workflow
+    params_unbind_cluster_workflow = {
+        'ID': workspace_id ,
+        'ClusterID': cluster_id, 
+        'Type': 'workflow',
+    }
+    bioos_service.unbind_cluster_and_workspace(params_bind_cluster_workflow)
+    print("binding workflow cluster")
+
+# 7. Worksapce 解除关联 notebook 计算集群，unbind_cluster_to_workspace notebook    
+    params_unbind_cluster_notebook = {
+        'ID': workspace_id ,
+        'ClusterID': cluster_id, 
+        'Type': 'notebook',
+    }
+
+    bioos_service.unbind_cluster_and_workspace(params_unbind_cluster_notebook)
+    print("unbinding notebook cluster")
+
+# 8. 删除 Workspace，Delete workspace
+    params_del_workspace = {
+        'ID': workspace_id,
+    }
+    bioos_service.delete_workspace(params_del_workspace)
+    print("Deleting Workspace",del_workspace_name,workspace_id)
